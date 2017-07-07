@@ -17,36 +17,25 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import it.polito.verigraph.deserializer.NodeCustomDeserializer;
 import it.polito.verigraph.serializer.CustomMapSerializer;
 
-//@ApiModel(value = "Node")
-//@XmlRootElement
+
 @JsonDeserialize(using = NodeCustomDeserializer.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class Node {
 
-	//@ApiModelProperty(required = false, hidden = true)
-	//@XmlTransient
+	
 	private long					id;
 
-	//@ApiModelProperty(required = true, example = "ep", value = "The name of the node can be any string")
+
 	private String					name;
 
-	//@ApiModelProperty(	required = true,
-						//example = "endpoint",
-						//value = "The functional types that are currently supported are: endpoint, firewall, nat, antispam, webclient, webserver, mailclient, mailserver")
+
 	private String					functional_type;
 
-	//@ApiModelProperty(required = false, hidden = true)
-	//@XmlTransient
 	private Configuration			configuration	= new Configuration();
 
-	//@ApiModelProperty(	name = "neighbours",
-						//notes = "Neighbours",
-						//dataType = "List[it.polito.verigraph.model.Neighbour]")
+
 	private Map<Long, Neighbour>	neighbours		= new HashMap<Long, Neighbour>();
 
-	//@ApiModelProperty(required = false, hidden = true)
-	//@XmlTransient
-	//private Set<Link>				links			= new HashSet<>();
 
 	public Node() {
 
@@ -75,7 +64,7 @@ public class Node {
 		this.functional_type = functional_type;
 	}
 
-	// @XmlTransient
+
 	public Configuration getConfiguration() {
 		return configuration;
 	}
@@ -101,20 +90,6 @@ public class Node {
 		this.id = id;
 	}
 
-/*	public Set<Link> getLinks() {
-		return links;
-	}
-
-	public void setLinks(Set<Link> links) {
-		this.links = links;
-	}
-
-	public void addLink(String url, String rel) {
-		Link link = new Link();
-		link.setLink(url);
-		link.setRel(rel);
-		links.add(link);
-	}*/
 
 	@Override
 	public int hashCode() {

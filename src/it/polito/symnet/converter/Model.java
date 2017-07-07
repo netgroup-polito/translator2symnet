@@ -735,6 +735,21 @@ public class Model {
 	public void generateNetwork() {
 		
 		
+		/* Try more network creation
+		Map<String, Map<String, String>> new=new HashMap<String, Map<String, String>>();
+		Map<String, String> in=new HashMap<String, String>();
+		in.put("192.168.1.5689", "a5");
+		nuovo.put("nat", in);
+		
+		Map<String, Map<String, String>> old=new HashMap<String, Map<String, String>>();
+		Map<String, String> out=new HashMap<String, String>();
+		out.put("192.168.1.1111", "45");
+		old.put("webserver1", out);
+		
+		tmp_elements.add(0, new);
+		tmp_elements.add(1, old);
+		*/ 
+		
 		if(!tmp_elements.isEmpty()){
 			//replace networks from the first
 			

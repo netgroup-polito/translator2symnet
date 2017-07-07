@@ -1,14 +1,11 @@
 package it.polito.verigraph.model;
 
-//import javax.xml.bind.annotation.XmlRootElement;
-//import javax.xml.bind.annotation.XmlTransient;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-//import io.swagger.annotations.ApiModel;
-//import io.swagger.annotations.ApiModelProperty;
+
 import it.polito.verigraph.deserializer.ConfigurationCustomDeserializer;
 import it.polito.verigraph.serializer.CustomConfigurationSerializer;
 
