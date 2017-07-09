@@ -36,7 +36,7 @@ public class Converter {
 
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws IOException, InterruptedException {
-
+		
 		String input=new String();
 		String policy=null;
 		String source=null;
@@ -44,28 +44,22 @@ public class Converter {
 		String box=null;
 		boolean test=false;
 		String start_point=null;
+		int tests=1;
 
 		if(args.length==1)
-			input=args[0];
-		else if(args.length==2){
-			input=args[0];
-			if(args[1].equals("-test"))
-				test=true;
-			else{
-				System.err.println("Command not valid");
-				System.exit(-1);
-			}
-				
-		}
-		else if(args.length==3){
+			input=args[0];		
+		else if(args.length==3){			
 			if(args[1].equals("-start")){
 				input=args[0];
 				start_point=args[2];
+			}else if(args[1].equals("-test")){
+				input=args[0];
+				test=true;
+				tests=Integer.parseInt(args[2]);				
 			}else{
 				System.err.println("Command not valid");
 				System.exit(-1);
-			}
-				
+			}			
 			
 		}
 		else if(args.length==4){
@@ -73,35 +67,33 @@ public class Converter {
 				input=args[0];
 				policy=args[1];
 				source=args[2];
-				dest=args[3];
-			}else if(args[1].equals("-test")){
-				test=true;
-				if(args[2].equals("-start")){
-					input=args[0];					
-					start_point=args[3];				
-				}else{
-					System.err.println("Command not valid");
-					System.exit(-1);
-				}
-					
+				dest=args[3];			
 			}else{
 				System.err.println("Command not valid");
 				System.exit(-1);
 			}
-		}else if(args.length==5){
-			input=args[0];
-			policy=args[1];
-			source=args[2];
-			dest=args[3];
-			box=args[4];
-			if(policy.equals("-r")){
+		}else if(args.length==5){			
+			input=args[0];			
+			if(args[1].equals("-test")){
+				test=true;
+				if(args[2].equals("-start")){									
+					start_point=args[3];
+					tests=Integer.parseInt(args[4]);
+					
+				}else{
+					System.err.println("Command not valid");
+					System.exit(-1);
+				}		
+			}else if(args[1].equals("-r")){
 				System.err.println("Policy argument (2) is not valid. It can be <-i> or <-t>");
 				System.exit(-1);
-			}else if(!policy.equals("-i")){
-				System.err.println("Policy argument (2) is not valid. It can be <-i> or <-t>");
-				System.exit(-1);
-			}else if(!policy.equals("-t")){
-				System.err.println("Policy argument (2) is not valid. It can be <-i> or <-t>");
+			}else if(args[1].equals("-i") || args[1].equals("-t")){
+				policy=args[1];
+				source=args[2];
+				dest=args[3];
+				box=args[4];				
+			}else{
+				System.err.println("Command not valid");
 				System.exit(-1);	
 			}
 		}else{
@@ -167,7 +159,7 @@ public class Converter {
 			//run solver	
 			Solver s=new Solver();
 			if(test==true){
-				s.runTest(start_point);
+				s.runTest(start_point, tests);
 	
 			}else{
 				s.run();				
