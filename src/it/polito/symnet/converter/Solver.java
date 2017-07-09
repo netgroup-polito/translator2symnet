@@ -46,22 +46,22 @@ public class Solver {
 
 	}
 
-	protected static void runTest(String start_point) {
+	protected static void runTest(String start_point, int iteration) {
 		List<String> time=new ArrayList<String>();
 		int index_dim=0;
 		
 		if(start_point!=null){
-			index_dim=12;
+			index_dim=iteration+2;
 			time.add("symnet");
 			time.add(start_point);
 			
 		}else{
-			index_dim=11;
+			index_dim=iteration+1;
 			time.add("symnet");
 		
 		}
 		
-		for(int i=0; i<10; i++){
+		for(int i=0; i<iteration; i++){
 			try {
 				String s=null;
 				System.out.println(i);
@@ -123,12 +123,13 @@ public class Solver {
 		}
 		StringBuilder builder = new StringBuilder();
 		for(int j=0; j<index_dim; j++){
-			if(j==index_dim-1){
-				builder.append(time.get(j));
+			if(j==index_dim-1){				
+					builder.append(time.get(j));
 
-			}else{
+			}else{				
 				builder.append(time.get(j));		
 				builder.append(",");
+			
 			}
 
 		}
