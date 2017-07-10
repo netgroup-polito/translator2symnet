@@ -13,9 +13,9 @@ object BuilderFactory {
     //    case "EndTunnel" => EndTunnel.getBuilder(nameValue)
     //    case "Firewall" => Firewall.getBuilder(nameValue)
     //    case "NAT" => NAT.getBuilder(nameValue)
-    case "Client" => Client.getBuilder(nameValue)
+    //case "Client" => Client.getBuilder(nameValue)
     case "Response" => Response.getBuilder(nameValue)
-    case "Inverter" => Inverter.getBuilder(nameValue)
+    //case "Inverter" => Inverter.getBuilder(nameValue)
     case "ApplicationClassifier" => ApplicationClassifier.getBuilder(nameValue)
     //    case "Server"  => Server.getBuilder(nameValue)
     case "Generator" => Generator.getBuilder(nameValue)	
@@ -45,7 +45,7 @@ object BuilderFactory {
     case "Template"  => Template.getBuilder(nameValue)
     case "AddTCPOptions"  => AddTCPOptions.getBuilder(nameValue)
     case "ScanTCPOptions"  => ScanTCPOptions.getBuilder(nameValue)
-    case "IPFilter"  => IPFilter.getBuilder(nameValue)
+    //case "IPFilter"  => IPFilter.getBuilder(nameValue)
     case "Paint" => Paint.getBuilder(nameValue)
     case "LinearIPLookup" => LinearIPLookup.getBuilder(nameValue)
     case _ => NoOpClickElm.getBuilder(nameValue, elementType)
@@ -58,11 +58,11 @@ object BuilderFactory {
 //    case "EndTunnel" => EndTunnel.getBuilder
 //    case "Firewall" => Firewall.getBuilder
 //    case "NAT" => NAT.getBuilder
-    case "Client" => Client.getBuilder
+   // case "Client" => Client.getBuilder
 //    case "Server" => Server.getBuilder
  case "Response" => Response.getBuilder
     case "Generator" => Generator.getBuilder
-    case "Inverter" => Inverter.getBuilder
+  //  case "Inverter" => Inverter.getBuilder
     case "ApplicationClassifier" => ApplicationClassifier.getBuilder
     case "Tee" => Tee.getBuilder
     case "Discard" => Discard.getBuilder
@@ -90,7 +90,7 @@ object BuilderFactory {
     case "Template"  => Template.getBuilder
     case "AddTCPOptions"  => AddTCPOptions.getBuilder
     case "ScanTCPOptions"  => ScanTCPOptions.getBuilder
-    case "IPFilter"  => IPFilter.getBuilder
+  //  case "IPFilter"  => IPFilter.getBuilder
     case "Paint"  => Paint.getBuilder
     case "LinearIPLookup" => LinearIPLookup.getBuilder
     case _ => NoOpClickElm.getBuilder(elementType)

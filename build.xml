@@ -13,14 +13,20 @@
     <property name="build.dir" location="${root.location}/build" />    
     <!-- The location for solutions -->
     <property name="lib.dir" location="${root.location}/lib" />    
+	<property name="path.prefix" value="it/polito" />
+	<property name="path.policy.prefix" value="it/polito/policy" />
     <property name="symnet.dir" location="${root.location}/symnet" />  
 	<property name="customized.dir" location="${root.location}/customized"/>
+	<property name="jar.symnet.dir" location="${root.location}/jar_symnet"/>
+	<property name="jar.policy.dir" location="${root.location}/jar_policy"/>
+	<property name="lib.symnet.dir" location="${root.location}/symnet/symnet_converter_lib"/>
+	<property name="json.dir" location="${root.location}/json"/>
+	
     
 
     <property name="target" value="1.8" />
     <property name="source" value="1.8" />        
     
-
 
     <target name="mvn-init" unless="compile.classpath" xmlns:artifact="urn:maven-artifact-ant">    
         <typedef resource="org/apache/maven/artifact/ant/antlib.xml" uri="urn:maven-artifact-ant"
@@ -50,26 +56,37 @@
 	        <mkdir dir="${build.dir}" />        
 	        <mkdir dir="${lib.dir}"/>
 	        <mkdir dir="${symnet.dir}"/>
-	        <get dest="${lib.dir}">           
-	            <url url="http://central.maven.org/maven2/org/apache/maven/maven-ant-tasks/2.1.3/maven-ant-tasks-2.1.3.jar"/>            
-	        </get>
-	        <get dest="${symnet.dir}">
-	             <url url="https://github.com/nets-cs-pub-ro/Symnet/archive/23f420e6cd7dd9e1b8d4159714513b4aea06cf42.zip"/>
-	        </get>        
-	       <unzip src="${symnet.dir}/23f420e6cd7dd9e1b8d4159714513b4aea06cf42.zip" dest="${symnet.dir}" overwrite="true">   
-	                </unzip>
-	                <delete file="${symnet.dir}/23f420e6cd7dd9e1b8d4159714513b4aea06cf42.zip"/>
-	                
-	    <move file="${symnet.dir}/Symnet-23f420e6cd7dd9e1b8d4159714513b4aea06cf42" tofile="${symnet.dir}"/>
-	         <delete file="${symnet.dir}/Symnet-23f420e6cd7dd9e1b8d4159714513b4aea06cf42"/>
-		<copy file="${customized.dir}/build.sbt" todir="${symnet.dir}" overwrite="true"/>
-		<copy toDir="${symnet.dir}/src/main/scala/org/change/v2/abstractnet/click/sefl" file="${customized.dir}/Response.scala" overwrite="true"/>
-		<copy toDir="${symnet.dir}/src/main/scala/org/change/v2/abstractnet/click/sefl" file="${customized.dir}/ApplicationClassifier.scala" overwrite="true"/>	
-		<copy toDir="${symnet.dir}/src/main/scala/org/change/v2/abstractnet/click/sefl" file="${customized.dir}/Generator.scala" overwrite="true"/>
-		<copy toDir="${symnet.dir}/src/main/scala/org/change/v2/util/canonicalnames" file="${customized.dir}/package.scala" overwrite="true"/>
-		<copy toDir="${symnet.dir}/src/main/scala/org/change/v2/analysis/memory" file="${customized.dir}/State.scala" overwrite="true"/>
-		<copy toDir="${symnet.dir}/src/main/scala/org/change/v2/abstractnet/generic" file="${customized.dir}/BuilderFactory.scala" overwrite="true"/>
+			<mkdir dir="${jar.policy.dir}"/>
+			<mkdir dir="${jar.symnet.dir}"/>
+			<mkdir dir="${lib.symnet.dir}"/>
+		<get dest="${lib.dir}">           
+					            <url url="http://central.maven.org/maven2/org/apache/maven/maven-ant-tasks/2.1.3/maven-ant-tasks-2.1.3.jar"/>            
+					        </get>
+					        <get dest="${symnet.dir}">
+					             <url url="https://github.com/nets-cs-pub-ro/Symnet/archive/23f420e6cd7dd9e1b8d4159714513b4aea06cf42.zip"/>
+					        </get>        
+					       <unzip src="${symnet.dir}/23f420e6cd7dd9e1b8d4159714513b4aea06cf42.zip" dest="${symnet.dir}" overwrite="true">   
+					                </unzip>
+					                <delete file="${symnet.dir}/23f420e6cd7dd9e1b8d4159714513b4aea06cf42.zip"/>
+					                
+					    <move file="${symnet.dir}/Symnet-23f420e6cd7dd9e1b8d4159714513b4aea06cf42" tofile="${symnet.dir}"/>
+					         <delete file="${symnet.dir}/Symnet-23f420e6cd7dd9e1b8d4159714513b4aea06cf42"/>
+						<copy file="${customized.dir}/build.sbt" todir="${symnet.dir}" overwrite="true"/>
+						<copy toDir="${symnet.dir}/src/main/scala/org/change/v2/abstractnet/click/sefl" file="${customized.dir}/Response.scala" overwrite="true"/>
+						<copy toDir="${symnet.dir}/src/main/scala/org/change/v2/abstractnet/click/sefl" file="${customized.dir}/ApplicationClassifier.scala" overwrite="true"/>	
+						<copy toDir="${symnet.dir}/src/main/scala/org/change/v2/abstractnet/click/sefl" file="${customized.dir}/Generator.scala" overwrite="true"/>
+						<copy toDir="${symnet.dir}/src/main/scala/org/change/v2/util/canonicalnames" file="${customized.dir}/package.scala" overwrite="true"/>
+						<copy toDir="${symnet.dir}/src/main/scala/org/change/v2/analysis/memory" file="${customized.dir}/State.scala" overwrite="true"/>
+						<copy toDir="${symnet.dir}/src/main/scala/org/change/v2/abstractnet/generic" file="${customized.dir}/BuilderFactory.scala" overwrite="true"/>
+		 <copy toDir="${symnet.dir}/json" overwrite="true">
+			                        <fileset dir="${json.dir}"/>
+			                      </copy>	              
 		
+		<path id="manifest.jar.classpath">
+				  <fileset dir="${lib.symnet.dir}">
+				     <include name="*.jar"/>
+				  </fileset>
+				</path>
     	 
     	<echo>Done</echo>
        
@@ -90,18 +107,85 @@
             source="${source}"
             target="${target}"
             includeantruntime="false">               
-            <src path="${src.dir}" />              
+            <src path="${src.dir}" /> 
+			<include name="${path.prefix}/**/*.java"/> 
+        	<classpath>
+        						<path id="compile.classpath"/>
+        						
+        	</classpath>
                 
         </javac>
         <echo>Done.</echo>
     </target>
+	
+	<macrodef name="jar-symnet">        
+	        <sequential>	                 
+	                   
+	                    <copy toDir="${jar.symnet.dir}/" overwrite="true">
+	                        <fileset dir="${build.dir}"/>
+	                      </copy>	              
+	                   
+	                    <copy toDir="${jar.symnet.dir}/maven-lib" overwrite="true">
+	                        <fileset refid="runtime.fileset">                                         
+	                        </fileset>
+	                      </copy> 	                 
+	        	 	<copy toDir="${lib.symnet.dir}" overwrite="true" flatten="true">
+	        		                        <fileset dir="${jar.symnet.dir}/maven-lib">     
+	        		                            <include name="**/**/*.jar"/>
+	        		                        </fileset>
+	        		                      </copy> 
+	                    <delete dir="${jar.symnet.dir}/maven-lib"/>   
+	        	
+	                           <copy toDir="${jar.policy.dir}" overwrite="true">
+	                               <fileset dir="${build.dir}"/>
+	                             </copy>  
+	        	<pathconvert property="manifest.classpath" pathsep=" ">
+	        			  <path refid="manifest.jar.classpath"/>
+	        			  <mapper>
+	        			    <chainedmapper>
+	        			       <flattenmapper/>
+	        			       <globmapper from="*.jar" to="symnet_converter_lib/*.jar"/>
+	        			    </chainedmapper>
+	        			  </mapper>
+	        			</pathconvert>
+	        	   
+	        </sequential>
+	    </macrodef>    
+	
+	     
+	    <target name="jar-symnet" depends="build-service">
+	        <jar-symnet/>  
+	        
+	    </target>	
 
+	
+	    <target name="generate-jar" depends="jar-symnet">  
+	    	<echo>"${manifest.classpath}"</echo>
+	    	
+	        <jar destfile="${symnet.dir}/symnet_converter.jar" basedir="${jar.symnet.dir}">	        	
+	    		<manifest>	    		
+	    	        <attribute name="Main-Class" value="it.polito.symnet.converter.Converter"/>
+	    	        <attribute name="Class-Path" value=". ${manifest.classpath}"/>	    			
+	    	    </manifest>
+	        </jar>
+	    	
+	    	<jar destfile="${symnet.dir}/policy.jar" basedir="${jar.policy.dir}">	    		        	
+		    	<manifest>		    		
+		    	        <attribute name="Main-Class" value="it.polito.policy.Policy"/>
+		    	        <attribute name="Class-Path" value=". ${manifest.classpath}"/>		    			
+	    	    </manifest>
+	    	</jar>
+	    	
+	    	<delete dir="${jar.symnet.dir}"/> 
+	    	<delete dir="${jar.policy.dir}"/> 
+	    </target>
 
  
     
     <!-- target for cleaning -->
     <target name="clean">
         <delete dir="${build.dir}" />
+    	
       
     </target>
 
