@@ -5,7 +5,7 @@ Installation instructions
 
 Install OpenJDK-8
 
-(If a different version is preferred, the ScalaZ3 jar must be recomplied against this jdk. You're on shaky ground there)
+(If a different version is preferred, the ScalaZ3 jar in translator2symnet/symnet folder must be recomplied against this jdk. You're on shaky ground there)
  - sudo apt-get update
  - sudo apt-get install -y python-software-properties
  - sudo add-apt-repository -y ppa:openjdk-r/ppa
@@ -99,9 +99,10 @@ The element has to contain the following structures:
 	```
 
 and it has to implement the following methods:
+
 	```
 	public Map<String, String> getPorts(){
-	return ports;
+		return ports;
 	}
 	public List<String> generateDeclaration() {}
 	public List<String> generateLink(){}
@@ -142,6 +143,7 @@ net.setObject(name, object_name);
 net.setPorts(object_name.getPorts(), name);
 ```
 where <Element_type> is the <element_type> of the new element and the object_name is the name choosen for the <element_type> object.
+
 5. If the new element does not contain an IPClassifier() performing the packet forwarding:
 -add the creation of the element in an else if statement in createElements() method of Model class in it.polito.symnet.converter package in this way:
 ```
@@ -185,7 +187,7 @@ The Generator element generates packets by the Fork SEFL instruction and it can 
 
 The Generator accepts many configuration strings. An usage example is showed below:
 
--<name> :: Generator(web 192.168.1.1 192.168.1.5 100 1, web 192.168.1.5 192.168.1.10 102 1, web 192.168.1.2 192.168.1.7 101 1): it generates three HTTP packet in the network.
+-<element_name> :: Generator(web 192.168.1.1 192.168.1.5 100 1, web 192.168.1.5 192.168.1.10 102 1, web 192.168.1.2 192.168.1.7 101 1): it generates three HTTP packet in the network.
 
 
 **ApplicationClassifier**
@@ -196,10 +198,12 @@ The ApplicationClassifier checks the new packet fields added by the improvements
 - email <email_from>: it checks whether the EmailFrom field of the packet is equal to <email_from>.
 
 The ApplicationClassifier accepts many configuration strings. An usage example is showed below:
--<name> :: ApplicationClassifier(app proto 1, app proto 2, -): it checks if ApplicationProto is equal to 1 or if it is equal to 2, else it performs the action associated with (-).
+
+-<element_name> :: ApplicationClassifier(app proto 1, app proto 2, -): it checks if ApplicationProto is equal to 1 or if it is equal to 2, else it performs the action associated with (-).
 
 **Response**
--<name> :: Response(): it swaps IPsrc=IPdst and TcpSrc=TcpDst fields.
+
+-<element_name> :: Response(): it swaps IPsrc=IPdst and TcpSrc=TcpDst fields.
 
 
 
