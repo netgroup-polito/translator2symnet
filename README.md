@@ -1,10 +1,8 @@
 Installation instructions
-### Unix
+**Unix** 
 
-# Install OpenJDK-8
-#
-# If a different version is preferred, the ScalaZ3 jar must be recomplied
-# against this jdk. You're on shaky ground there.
+Install OpenJDK-8
+(If a different version is preferred, the ScalaZ3 jar must be recomplied against this jdk. You're on shaky ground there)
 -sudo apt-get update
 -sudo apt-get install -y python-software-properties
 -sudo add-apt-repository -y ppa:openjdk-r/ppa
@@ -12,15 +10,15 @@ Installation instructions
 -sudo apt-get install -y openjdk-8-jdk 
 
 
-# If the link is broken, search sbt on google and grab the latest version
-# from there.
--wget https://dl.bintray.com/sbt/native-packages/sbt/0.13.9/sbt-0.13.9.tgz 
--tar xf sbt-0.13.9.tgz 
+(If the link is broken, search sbt on google and grab the latest version from there)
+-wget https://dl.bintray.com/sbt/native-packages/sbt/0.13.9/sbt-0.13.9.tgz
+-tar xf sbt-0.13.9.tgz
 -rm *.tgz
-# Make sure sbt is in path.
+
+Make sure sbt is in path.
 -sudo ln -s ~/sbt/bin/sbt /usr/local/bin/sbt
 
-###Download translator2symnet and Symnet
+**Download translator2symnet and Symnet**
 
 -download or clone translator2symnet 
 -run generate-jar ant task: it download the Symnet tool in "symnet" folder, modifies the necessary files and creates two .jar in "symnet" folder
@@ -29,7 +27,7 @@ The VeriGraph to Symnet converter runs from the translator2symnet/symnet/symnet 
 -network: it contains the output files of the VeriGraph input to Symnet input conversion;
 -outputs: it contains the output files of the entire execution.
 
-###How to perform converter features
+**How to perform converter features**
 
 The VeriGraph to Symnet converter is able to perform several types of executions. The VeriGraph json input file has to be put into the folder translator2symnet/symnet and then, opening the window terminal where the symnet_converter.jar and the policy.jar are, it is possible to perform one of the following :
 
@@ -43,21 +41,21 @@ The VeriGraph to Symnet converter is able to perform several types of executions
 
 - java -jar symnet_converter.jar <input_file.json> -start <start_node>: it explores the network starting from <start_node> to all the others. In the outputs folder, the <start_node>.output file shows which nodes the <start_node> can reach;
 
-###Check Policies
+**Check Policies**
 
 Once the execution is performed and the results have been stored in outputs folder, it is possible to check the rechability, isolation and traversal policies.
 
-##Reachability
+*Reachability*
 java -jar policy.jar -r <source_node> <destination_node>: it prints on command line the reachablity (-r) policy result (SAT or UNSAT) between the <source_node> and the <destination_node>;
 
-##Isolation
+*Isolation*
 java -jar policy.jar -i <source_node> <destination_node> <middleboxe>: it prints on command line the traversal (-t) policy result; SAT if there is at least one path between the <source_node> and the <destination_node> that traverse the <middleboxe>; UNSAT otherwise;
 
-##Traversal
+*Traversal*
 java -jar policy.jar -t <source_node> <destination_node> <middleboxe>: it prints on command line the traversal (-t) policy result; SAT if there is at least one path between the <source_node> and the <destination_node> that traverse the <middleboxe>; UNSAT otherwise.
 
-###How to add a new element
-##How to modify packet model
+**How to add a new element**
+**How to modify packet model**
 The packet model can be extended.
 In order to add a new layer, perform the following steps:
 -edit package.scala file in org.change.v2.util.canonicalnames inserting:
@@ -65,7 +63,7 @@ In order to add a new layer, perform the following steps:
 	-the new fields (if necessary) with their offset.
 -edit the State.scala file in org.change.v2.analysis.memory inserting:
 	-the SEFL instructions in order to allocate the new Layer Tag and the new fields.
-##Adding new element
+**Adding new element**
 In order to add new features, a scala file containing SEFL instruction must be written. After that, you have to execute the following steps:
 	1. Insert the scala file just created into org.change.v2.abstractnet.click.sefl;
 	2. Edit BuilderFactory in org.change.v2.abstractnet.click.sefl inserting:
@@ -73,27 +71,27 @@ In order to add new features, a scala file containing SEFL instruction must be w
 		-case "<element_name>" -> <element_name>.getBuilder(nameValue) in def getBuilder(name Value: String, elementType:String);
 		-case "<element_name>" -> <element_name>.getBuilder.
 
-###How to add new VeriGraph elements models
+**How to add new VeriGraph elements models**
 If the VeriGraph element model that you want to translate into Symnet element model is a new VeriGraph element (see translator2symnet/json folder to know which VeriGraph elements model are already present in translator2symnet), first you have to make this command:
 -insert the json schema of the new VeriGraph element into the json folder in translator2symnet.
 
 Then (and also in case of VeriGraph element already present in translator2symnet) you have to make the following:
 	1. Create a new <element_type> Java class in it.polito.symnet.model package; so in this class you have to put the combination of Symnet elements that can represent the VeriGraph element you want to model. 
 	The element has to contain the following structures:
-	```java
-	Map<String, String> ports=new HashMap<String, String>();
-	Map<String, List<String>> declaration=new HashMap<String, List<String>>();
-	Map<String, String> link=new HashMap<String, String>();
-	```
+		```java
+		Map<String, String> ports=new HashMap<String, String>();
+		Map<String, List<String>> declaration=new HashMap<String, List<String>>();
+		Map<String, String> link=new HashMap<String, String>();
+		```
 
 	and it has to implement the following methods:
-	```java
-	public Map<String, String> getPorts(){
-		return ports;
-	}
-	public List<String> generateDeclaration() {}
-	public List<String> generateLink(){}
-	```
+		```java
+		public Map<String, String> getPorts(){
+			return ports;
+		}
+		public List<String> generateDeclaration() {}
+		public List<String> generateLink(){}
+		```
 
 	2. Insert a switch case in getConfiguration() method of Model class in it.polito.symnet.converter package in order to retrieve the configurations of the node (if any);
 	3. If the new element does not need an ip address:
@@ -101,30 +99,30 @@ Then (and also in case of VeriGraph element already present in translator2symnet
 	4. If the new element contains an IPClassifier() performing the packet forwarding:
 		-add the <element_type> in the routing elements List of generateRouting() method of the Model class in it.polito.symnet.converter package;
 		-add the <element_type> as a new switch case and add the following code:
-		```java
-			List<String> n=neighbours.get(name);
-			<Element_Type> object name=new <Element_Type>(...);
-			Map<String, String> map=new HashMap<String, String>();
-			for(String adr : ad){
-				if(adr.equals(name))
-				continue;
-				int found=0;
-				if(n.contains(adr)){
-					map.put(addresses.get(adr), object_name.getPorts().get(adr));
-				}else{
-					for(int j=0; j<n.size(); j++){
-						String tmp=n.get(j);
-						Set<String>visited=new HashSet<String>();
-						visited.add(name);
-						researchRoute(visited, map, adr , tmp , name , n.get(j), object_name.getPorts(), found, neighbours);
+			```java
+				List<String> n=neighbours.get(name);
+				<Element_Type> object name=new <Element_Type>(...);
+				Map<String, String> map=new HashMap<String, String>();
+				for(String adr : ad){
+					if(adr.equals(name))
+					continue;
+					int found=0;
+					if(n.contains(adr)){
+						map.put(addresses.get(adr), object_name.getPorts().get(adr));
+					}else{
+						for(int j=0; j<n.size(); j++){
+							String tmp=n.get(j);
+							Set<String>visited=new HashSet<String>();
+							visited.add(name);
+							researchRoute(visited, map, adr , tmp , name , n.get(j), object_name.getPorts(), found, neighbours);
+						}
 					}
 				}
-			}
-			elements.put(name, map);
-			net.setElements(elements);
-			net.setObject(name, object_name);
-			net.setPorts(object_name.getPorts(), name);
-			```
+				elements.put(name, map);
+				net.setElements(elements);
+				net.setObject(name, object_name);
+				net.setPorts(object_name.getPorts(), name);
+				```
 	where <Element_type> is the <element_type> of the new element and the object_name is the name choosen for the <element_type> object.
 	5. If the new element does not contain an IPClassifier() performing the packet forwarding:
 		-add the creation of the element in an else if statement in createElements() method of Model class in it.polito.symnet.converter package in this way:
