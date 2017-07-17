@@ -113,9 +113,9 @@ and it has to implement the following methods:
 
 4. If the new element contains an IPClassifier() performing the packet forwarding:
 
--add the <element_type> in the routing elements List of generateRouting() method of the Model class in it.polito.symnet.converter package;
+	-add the <element_type> in the routing elements List of generateRouting() method of the Model class in it.polito.symnet.converter package;
 
--add the <element_type> as a new switch case and add the following code:
+	-add the <element_type> as a new switch case and add the following code:
 
 ```
 List<String> n=neighbours.get(name);
@@ -168,16 +168,16 @@ In order to make improvements, new elements are added to the basic installation.
 The Generator element generates packets by the Fork SEFL instruction and it can also overwrite some packet fields. It can be used with the following patterns as configuration strings:
 
 - web <ip_src> <ip_dest> <body> <application_protocol>: it generates an HTTP packet with the following fields:
- - ip_src: the ip source address of the packet;
- - ip_dst: the ip destination address of the packet;
- - body: an integer that represents the body content of the packet;
- - application_protocol: an integer that represents the application protocol of the packet.
+	 - ip_src: the ip source address of the packet;
+ 	- ip_dst: the ip destination address of the packet;
+ 	- body: an integer that represents the body content of the packet;
+ 	- application_protocol: an integer that represents the application protocol of the packet.
 
 - mail <ip_src> <ip_dest> <email_from> <application_protocol>: it generates a POP3 packet with the following fields:
- - ip:src: the ip source address of the packet;
- - ip_dst: the ip destination address of the packet;
- - email_from: an integer that represents the email_from content of the packet;
- - application_protocol: an integer that represents the application protocol of the packet.
+ 	- ip:src: the ip source address of the packet;
+ 	- ip_dst: the ip destination address of the packet;
+ 	- email_from: an integer that represents the email_from content of the packet;
+ 	- application_protocol: an integer that represents the application protocol of the packet.
 
 - ip_src <ip_src>: it overwrites the ip source address of the packet;
 - ip_dst <ip_dest>: it overwrites the ip destination address of the packet;
@@ -185,7 +185,7 @@ The Generator element generates packets by the Fork SEFL instruction and it can 
 
 The Generator accepts many configuration strings. An usage example is showed below:
 
-<name> :: Generator(web 192.168.1.1 192.168.1.5 100 1, web 192.168.1.5 192.168.1.10 102 1, web 192.168.1.2 192.168.1.7 101 1): it generates three HTTP packet in the network.
+-<name> :: Generator(web 192.168.1.1 192.168.1.5 100 1, web 192.168.1.5 192.168.1.10 102 1, web 192.168.1.2 192.168.1.7 101 1): it generates three HTTP packet in the network.
 
 
 **ApplicationClassifier**
@@ -195,12 +195,11 @@ The ApplicationClassifier checks the new packet fields added by the improvements
 - body <body>: it checks whether the Body field of the packet is equal to <body>;
 - email <email_from>: it checks whether the EmailFrom field of the packet is equal to <email_from>.
 
-The ApplicationClassifier accepts many configuration strings. An usage
-example is showed below:
-<name> :: ApplicationClassifier(app proto 1, app proto 2, -): it checks if ApplicationProto is equal to 1 or if it is equal to 2, else it performs the action associated with (-).
+The ApplicationClassifier accepts many configuration strings. An usage example is showed below:
+-<name> :: ApplicationClassifier(app proto 1, app proto 2, -): it checks if ApplicationProto is equal to 1 or if it is equal to 2, else it performs the action associated with (-).
 
 **Response**
-<name> :: Response(): it swaps IPsrc=IPdst and TcpSrc=TcpDst fields.
+-<name> :: Response(): it swaps IPsrc=IPdst and TcpSrc=TcpDst fields.
 
 
 
