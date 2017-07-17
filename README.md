@@ -1,4 +1,6 @@
 Installation instructions
+
+
 **Unix** 
 
 Install OpenJDK-8
@@ -73,13 +75,13 @@ In order to add a new layer, perform the following steps:
 **Adding new element**
 
 In order to add new features, a scala file containing SEFL instruction must be written. After that, you have to execute the following steps:
-	1. Insert the scala file just created into org.change.v2.abstractnet.click.sefl;
 
-	2. Edit BuilderFactory in org.change.v2.abstractnet.click.sefl inserting:
+1. Insert the scala file just created into org.change.v2.abstractnet.click.sefl;
 
-		- case "<element_name>" -> <element_name>.getBuilder(nameValue) in def getBuilder(name Value: String, elementType:String);
+2. Edit BuilderFactory in org.change.v2.abstractnet.click.sefl inserting:
 
-		- case "<element_name>" -> <element_name>.getBuilder.
+- case "<element_name>" -> <element_name>.getBuilder(nameValue) in def getBuilder(name Value: String, elementType:String);
+- case "<element_name>" -> <element_name>.getBuilder.
 
 **How to add new VeriGraph elements models**
 
@@ -88,67 +90,67 @@ If the VeriGraph element model that you want to translate into Symnet element mo
 
 Then (and also in case of VeriGraph element already present in translator2symnet) you have to make the following:
 
-	1. Create a new <element_type> Java class in it.polito.symnet.model package; so in this class you have to put the combination of Symnet elements that can represent the VeriGraph element you want to model. 
-	The element has to contain the following structures:
-		```
-		Map<String, String> ports=new HashMap<String, String>();
-		Map<String, List<String>> declaration=new HashMap<String, List<String>>();
-		Map<String, String> link=new HashMap<String, String>();
-		```
+1. Create a new <element_type> Java class in it.polito.symnet.model package; so in this class you have to put the combination of Symnet elements that can represent the VeriGraph element you want to model. 
+The element has to contain the following structures:
+	```
+	Map<String, String> ports=new HashMap<String, String>();
+	Map<String, List<String>> declaration=new HashMap<String, List<String>>();
+	Map<String, String> link=new HashMap<String, String>();
+	```
 
-	and it has to implement the following methods:
-		```
-		public Map<String, String> getPorts(){
-			return ports;
+and it has to implement the following methods:
+	```
+	public Map<String, String> getPorts(){
+	return ports;
+	}
+	public List<String> generateDeclaration() {}
+	public List<String> generateLink(){}
+	```
+
+2. Insert a switch case in getConfiguration() method of Model class in it.polito.symnet.converter package in order to retrieve the configurations of the node (if any);
+3. If the new element does not need an ip address:
+-add the <element_type> in the notAddressing List of the createAddress() method of Model class in it.polito.symnet.converter package.
+
+4. If the new element contains an IPClassifier() performing the packet forwarding:
+
+-add the <element_type> in the routing elements List of generateRouting() method of the Model class in it.polito.symnet.converter package;
+
+-add the <element_type> as a new switch case and add the following code:
+
+```
+List<String> n=neighbours.get(name);
+<Element_Type> object name=new <Element_Type>(...);
+Map<String, String> map=new HashMap<String, String>();
+for(String adr : ad){
+	if(adr.equals(name))
+	continue;
+	int found=0;
+	if(n.contains(adr)){
+		map.put(addresses.get(adr), object_name.getPorts().get(adr));
+	}else{
+		for(int j=0; j<n.size(); j++){
+			String tmp=n.get(j);
+			Set<String>visited=new HashSet<String>();
+			visited.add(name);
+			researchRoute(visited, map, adr , tmp , name , n.get(j), object_name.getPorts(), found, neighbours);
 		}
-		public List<String> generateDeclaration() {}
-		public List<String> generateLink(){}
-		```
+	}
+}
+elements.put(name, map);
+net.setElements(elements);
+net.setObject(name, object_name);
+net.setPorts(object_name.getPorts(), name);
+```
+where <Element_type> is the <element_type> of the new element and the object_name is the name choosen for the <element_type> object.
+5. If the new element does not contain an IPClassifier() performing the packet forwarding:
+-add the creation of the element in an else if statement in createElements() method of Model class in it.polito.symnet.converter package in this way:
+```
+<Element Type> object_name=new <Element_Type>(...);
+net.setObject(name, object_name);
+net.setPorts(object_name.getPorts(), name);
+```
 
-	2. Insert a switch case in getConfiguration() method of Model class in it.polito.symnet.converter package in order to retrieve the configurations of the node (if any);
-	3. If the new element does not need an ip address:
-		-add the <element_type> in the notAddressing List of the createAddress() method of Model class in it.polito.symnet.converter package.
-
-	4. If the new element contains an IPClassifier() performing the packet forwarding:
-
-		add the <element_type> in the routing elements List of generateRouting() method of the Model class in it.polito.symnet.converter package;
-
-		-add the <element_type> as a new switch case and add the following code:
-
-			```
-				List<String> n=neighbours.get(name);
-				<Element_Type> object name=new <Element_Type>(...);
-				Map<String, String> map=new HashMap<String, String>();
-				for(String adr : ad){
-					if(adr.equals(name))
-					continue;
-					int found=0;
-					if(n.contains(adr)){
-						map.put(addresses.get(adr), object_name.getPorts().get(adr));
-					}else{
-						for(int j=0; j<n.size(); j++){
-							String tmp=n.get(j);
-							Set<String>visited=new HashSet<String>();
-							visited.add(name);
-							researchRoute(visited, map, adr , tmp , name , n.get(j), object_name.getPorts(), found, neighbours);
-						}
-					}
-				}
-				elements.put(name, map);
-				net.setElements(elements);
-				net.setObject(name, object_name);
-				net.setPorts(object_name.getPorts(), name);
-				```
-	where <Element_type> is the <element_type> of the new element and the object_name is the name choosen for the <element_type> object.
-	5. If the new element does not contain an IPClassifier() performing the packet forwarding:
-		-add the creation of the element in an else if statement in createElements() method of Model class in it.polito.symnet.converter package in this way:
-			```
-			<Element Type> object_name=new <Element_Type>(...);
-			net.setObject(name, object_name);
-			net.setPorts(object_name.getPorts(), name);
-			```
-
-	6. Rerun generate-jar ant task.
+6. Rerun generate-jar ant task.
 
 
 **Tester**
@@ -166,23 +168,22 @@ In order to make improvements, new elements are added to the basic installation.
 The Generator element generates packets by the Fork SEFL instruction and it can also overwrite some packet fields. It can be used with the following patterns as configuration strings:
 
 - web <ip_src> <ip_dest> <body> <application_protocol>: it generates an HTTP packet with the following fields:
-	 - ip_src: the ip source address of the packet;
-	 - ip_dst: the ip destination address of the packet;
-	 - body: an integer that represents the body content of the packet;
-	 - application_protocol: an integer that represents the application protocol of the packet.
+ - ip_src: the ip source address of the packet;
+ - ip_dst: the ip destination address of the packet;
+ - body: an integer that represents the body content of the packet;
+ - application_protocol: an integer that represents the application protocol of the packet.
 
 - mail <ip_src> <ip_dest> <email_from> <application_protocol>: it generates a POP3 packet with the following fields:
-	 - ip:src: the ip source address of the packet;
-	 - ip_dst: the ip destination address of the packet;
-	 - email_from: an integer that represents the email_from content of the packet;
-	 - application_protocol: an integer that represents the application protocol of the packet.
+ - ip:src: the ip source address of the packet;
+ - ip_dst: the ip destination address of the packet;
+ - email_from: an integer that represents the email_from content of the packet;
+ - application_protocol: an integer that represents the application protocol of the packet.
 
 - ip_src <ip_src>: it overwrites the ip source address of the packet;
 - ip_dst <ip_dest>: it overwrites the ip destination address of the packet;
 - proto <application_protocol>: it overwrites the application protocol field of the packet.
 
 The Generator accepts many configuration strings. An usage example is showed below:
-
 
 <name> :: Generator(web 192.168.1.1 192.168.1.5 100 1, web 192.168.1.5 192.168.1.10 102 1, web 192.168.1.2 192.168.1.7 101 1): it generates three HTTP packet in the network.
 
