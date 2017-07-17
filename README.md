@@ -59,7 +59,9 @@ java -jar policy.jar -i <source_node> <destination_node> <middleboxe>: it prints
 java -jar policy.jar -t <source_node> <destination_node> <middleboxe>: it prints on command line the traversal (-t) policy result; SAT if there is at least one path between the <source_node> and the <destination_node> that traverse the <middleboxe>; UNSAT otherwise.
 
 **How to add a new element**
+
 **How to modify packet model**
+
 The packet model can be extended.
 In order to add a new layer, perform the following steps:
  - edit package.scala file in org.change.v2.util.canonicalnames inserting:
@@ -67,30 +69,35 @@ In order to add a new layer, perform the following steps:
 	 - the new fields (if necessary) with their offset.
  - edit the State.scala file in org.change.v2.analysis.memory inserting:
 	 - the SEFL instructions in order to allocate the new Layer Tag and the new fields.
+
 **Adding new element**
+
 In order to add new features, a scala file containing SEFL instruction must be written. After that, you have to execute the following steps:
 	1. Insert the scala file just created into org.change.v2.abstractnet.click.sefl;
 
 	2. Edit BuilderFactory in org.change.v2.abstractnet.click.sefl inserting:
 
-		-case "<element_name>" -> <element_name>.getBuilder(nameValue) in def getBuilder(name Value: String, elementType:String);
-		-case "<element_name>" -> <element_name>.getBuilder.
+		- case "<element_name>" -> <element_name>.getBuilder(nameValue) in def getBuilder(name Value: String, elementType:String);
+
+		- case "<element_name>" -> <element_name>.getBuilder.
 
 **How to add new VeriGraph elements models**
+
 If the VeriGraph element model that you want to translate into Symnet element model is a new VeriGraph element (see translator2symnet/json folder to know which VeriGraph elements model are already present in translator2symnet), first you have to make this command:
  - insert the json schema of the new VeriGraph element into the json folder in translator2symnet.
 
 Then (and also in case of VeriGraph element already present in translator2symnet) you have to make the following:
+
 	1. Create a new <element_type> Java class in it.polito.symnet.model package; so in this class you have to put the combination of Symnet elements that can represent the VeriGraph element you want to model. 
 	The element has to contain the following structures:
-		```java
+		```
 		Map<String, String> ports=new HashMap<String, String>();
 		Map<String, List<String>> declaration=new HashMap<String, List<String>>();
 		Map<String, String> link=new HashMap<String, String>();
 		```
 
 	and it has to implement the following methods:
-		```java
+		```
 		public Map<String, String> getPorts(){
 			return ports;
 		}
@@ -101,10 +108,14 @@ Then (and also in case of VeriGraph element already present in translator2symnet
 	2. Insert a switch case in getConfiguration() method of Model class in it.polito.symnet.converter package in order to retrieve the configurations of the node (if any);
 	3. If the new element does not need an ip address:
 		-add the <element_type> in the notAddressing List of the createAddress() method of Model class in it.polito.symnet.converter package.
+
 	4. If the new element contains an IPClassifier() performing the packet forwarding:
-		-add the <element_type> in the routing elements List of generateRouting() method of the Model class in it.polito.symnet.converter package;
+
+		add the <element_type> in the routing elements List of generateRouting() method of the Model class in it.polito.symnet.converter package;
+
 		-add the <element_type> as a new switch case and add the following code:
-			```java
+
+			```
 				List<String> n=neighbours.get(name);
 				<Element_Type> object name=new <Element_Type>(...);
 				Map<String, String> map=new HashMap<String, String>();
@@ -131,7 +142,7 @@ Then (and also in case of VeriGraph element already present in translator2symnet
 	where <Element_type> is the <element_type> of the new element and the object_name is the name choosen for the <element_type> object.
 	5. If the new element does not contain an IPClassifier() performing the packet forwarding:
 		-add the creation of the element in an else if statement in createElements() method of Model class in it.polito.symnet.converter package in this way:
-			```java
+			```
 			<Element Type> object_name=new <Element_Type>(...);
 			net.setObject(name, object_name);
 			net.setPorts(object_name.getPorts(), name);
@@ -141,6 +152,7 @@ Then (and also in case of VeriGraph element already present in translator2symnet
 
 
 **Tester**
+
 In order to start the test you have to put the json graph (VeriGraph input format) of the network that you want to test into the translator2symnet/symnet root folder, and then run one of the following commands:
 1. java -jar symnet converter.jar <input_file.json> -test <iteration_number>: it executes hiteration numberi times the exploration of the entire network;
 2. java -jar symnet converter.jar <input_file.json> -test -start <start_node> <iteration_number>: it executes <iteration_number> times the exploration of the network starting from <start_node> to all the others.
@@ -170,6 +182,7 @@ The Generator element generates packets by the Fork SEFL instruction and it can 
 - proto <application_protocol>: it overwrites the application protocol field of the packet.
 
 The Generator accepts many configuration strings. An usage example is showed below:
+
 
 <name> :: Generator(web 192.168.1.1 192.168.1.5 100 1, web 192.168.1.5 192.168.1.10 102 1, web 192.168.1.2 192.168.1.7 101 1): it generates three HTTP packet in the network.
 
