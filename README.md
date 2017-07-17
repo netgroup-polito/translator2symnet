@@ -2,30 +2,31 @@ Installation instructions
 **Unix** 
 
 Install OpenJDK-8
+
 (If a different version is preferred, the ScalaZ3 jar must be recomplied against this jdk. You're on shaky ground there)
--sudo apt-get update
--sudo apt-get install -y python-software-properties
--sudo add-apt-repository -y ppa:openjdk-r/ppa
--sudo apt-get update
--sudo apt-get install -y openjdk-8-jdk 
+ - sudo apt-get update
+ - sudo apt-get install -y python-software-properties
+ - sudo add-apt-repository -y ppa:openjdk-r/ppa
+ - sudo apt-get update
+ - sudo apt-get install -y openjdk-8-jdk 
 
 
 (If the link is broken, search sbt on google and grab the latest version from there)
--wget https://dl.bintray.com/sbt/native-packages/sbt/0.13.9/sbt-0.13.9.tgz
--tar xf sbt-0.13.9.tgz
--rm *.tgz
+ - wget https://dl.bintray.com/sbt/native-packages/sbt/0.13.9/sbt-0.13.9.tgz
+ - tar xf sbt-0.13.9.tgz
+ - rm *.tgz
 
 Make sure sbt is in path.
--sudo ln -s ~/sbt/bin/sbt /usr/local/bin/sbt
+ - sudo ln -s ~/sbt/bin/sbt /usr/local/bin/sbt
 
 **Download translator2symnet and Symnet**
 
--download or clone translator2symnet 
--run generate-jar ant task: it download the Symnet tool in "symnet" folder, modifies the necessary files and creates two .jar in "symnet" folder
+ - download or clone translator2symnet 
+ - run generate-jar ant task: it download the Symnet tool in "symnet" folder, modifies the necessary files and creates two .jar in "symnet" folder
 
 The VeriGraph to Symnet converter runs from the translator2symnet/symnet/symnet converter.jar. It generates two folders where it puts the files produced by its execution:
--network: it contains the output files of the VeriGraph input to Symnet input conversion;
--outputs: it contains the output files of the entire execution.
+ - network: it contains the output files of the VeriGraph input to Symnet input conversion;
+ - outputs: it contains the output files of the entire execution.
 
 **How to perform converter features**
 
@@ -46,26 +47,30 @@ The VeriGraph to Symnet converter is able to perform several types of executions
 Once the execution is performed and the results have been stored in outputs folder, it is possible to check the rechability, isolation and traversal policies.
 
 *Reachability*
+
 java -jar policy.jar -r <source_node> <destination_node>: it prints on command line the reachablity (-r) policy result (SAT or UNSAT) between the <source_node> and the <destination_node>;
 
 *Isolation*
+
 java -jar policy.jar -i <source_node> <destination_node> <middleboxe>: it prints on command line the traversal (-t) policy result; SAT if there is at least one path between the <source_node> and the <destination_node> that traverse the <middleboxe>; UNSAT otherwise;
 
 *Traversal*
+
 java -jar policy.jar -t <source_node> <destination_node> <middleboxe>: it prints on command line the traversal (-t) policy result; SAT if there is at least one path between the <source_node> and the <destination_node> that traverse the <middleboxe>; UNSAT otherwise.
 
 **How to add a new element**
 **How to modify packet model**
 The packet model can be extended.
 In order to add a new layer, perform the following steps:
--edit package.scala file in org.change.v2.util.canonicalnames inserting:
-	-the Layer Tag for the desired Layer to add;
-	-the new fields (if necessary) with their offset.
--edit the State.scala file in org.change.v2.analysis.memory inserting:
-	-the SEFL instructions in order to allocate the new Layer Tag and the new fields.
+ - edit package.scala file in org.change.v2.util.canonicalnames inserting:
+	 - the Layer Tag for the desired Layer to add;
+	 - the new fields (if necessary) with their offset.
+ - edit the State.scala file in org.change.v2.analysis.memory inserting:
+	 - the SEFL instructions in order to allocate the new Layer Tag and the new fields.
 **Adding new element**
 In order to add new features, a scala file containing SEFL instruction must be written. After that, you have to execute the following steps:
 	1. Insert the scala file just created into org.change.v2.abstractnet.click.sefl;
+
 	2. Edit BuilderFactory in org.change.v2.abstractnet.click.sefl inserting:
 
 		-case "<element_name>" -> <element_name>.getBuilder(nameValue) in def getBuilder(name Value: String, elementType:String);
@@ -73,7 +78,7 @@ In order to add new features, a scala file containing SEFL instruction must be w
 
 **How to add new VeriGraph elements models**
 If the VeriGraph element model that you want to translate into Symnet element model is a new VeriGraph element (see translator2symnet/json folder to know which VeriGraph elements model are already present in translator2symnet), first you have to make this command:
--insert the json schema of the new VeriGraph element into the json folder in translator2symnet.
+ - insert the json schema of the new VeriGraph element into the json folder in translator2symnet.
 
 Then (and also in case of VeriGraph element already present in translator2symnet) you have to make the following:
 	1. Create a new <element_type> Java class in it.polito.symnet.model package; so in this class you have to put the combination of Symnet elements that can represent the VeriGraph element you want to model. 
@@ -135,30 +140,30 @@ Then (and also in case of VeriGraph element already present in translator2symnet
 	6. Rerun generate-jar ant task.
 
 
-### Tester
+**Tester**
 In order to start the test you have to put the json graph (VeriGraph input format) of the network that you want to test into the translator2symnet/symnet root folder, and then run one of the following commands:
 1. java -jar symnet converter.jar <input_file.json> -test <iteration_number>: it executes hiteration numberi times the exploration of the entire network;
 2. java -jar symnet converter.jar <input_file.json> -test -start <start_node> <iteration_number>: it executes <iteration_number> times the exploration of the network starting from <start_node> to all the others.
 At the end of the execution, a csv output is generated.
 
 
-### How to configure the new elements
+**How to configure the new elements**
 In order to make improvements, new elements are added to the basic installation. The following elements have been added in org.change.v2.abstractnet.click.sefl
 
-##Generator
+**Generator**
 The Generator element generates packets by the Fork SEFL instruction and it can also overwrite some packet fields. It can be used with the following patterns as configuration strings:
 
 - web <ip_src> <ip_dest> <body> <application_protocol>: it generates an HTTP packet with the following fields:
-	-ip_src: the ip source address of the packet;
-	-ip_dst: the ip destination address of the packet;
-	-body: an integer that represents the body content of the packet;
-	-application_protocol: an integer that represents the application protocol of the packet.
+	 - ip_src: the ip source address of the packet;
+	 - ip_dst: the ip destination address of the packet;
+	 - body: an integer that represents the body content of the packet;
+	 - application_protocol: an integer that represents the application protocol of the packet.
 
 - mail <ip_src> <ip_dest> <email_from> <application_protocol>: it generates a POP3 packet with the following fields:
-	-ip:src: the ip source address of the packet;
-	-ip_dst: the ip destination address of the packet;
-	-email_from: an integer that represents the email_from content of the packet;
-	-application_protocol: an integer that represents the application protocol of the packet.
+	 - ip:src: the ip source address of the packet;
+	 - ip_dst: the ip destination address of the packet;
+	 - email_from: an integer that represents the email_from content of the packet;
+	 - application_protocol: an integer that represents the application protocol of the packet.
 
 - ip_src <ip_src>: it overwrites the ip source address of the packet;
 - ip_dst <ip_dest>: it overwrites the ip destination address of the packet;
@@ -166,11 +171,10 @@ The Generator element generates packets by the Fork SEFL instruction and it can 
 
 The Generator accepts many configuration strings. An usage example is showed below:
 
-<name> :: Generator(web 192.168.1.1 192.168.1.5 100 1, web 192.168.1.5 192.168.1.10 102 1, web 192.168.1.2 192.168.1.7 101
-1): it generates three HTTP packet in the network.
+<name> :: Generator(web 192.168.1.1 192.168.1.5 100 1, web 192.168.1.5 192.168.1.10 102 1, web 192.168.1.2 192.168.1.7 101 1): it generates three HTTP packet in the network.
 
 
-##ApplicationClassifier
+**ApplicationClassifier**
 The ApplicationClassifier checks the new packet fields added by the improvements. It can be used as follows:
 
 - app proto <application_protocol>: it checks whether the ApplicationProto field of the packet is equal to <application_protocol>;
@@ -181,7 +185,7 @@ The ApplicationClassifier accepts many configuration strings. An usage
 example is showed below:
 <name> :: ApplicationClassifier(app proto 1, app proto 2, -): it checks if ApplicationProto is equal to 1 or if it is equal to 2, else it performs the action associated with (-).
 
-##Response
+**Response**
 <name> :: Response(): it swaps IPsrc=IPdst and TcpSrc=TcpDst fields.
 
 
