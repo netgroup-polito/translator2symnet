@@ -118,7 +118,7 @@ public class Parser {
 	public static void validateNodeConfigurationAgainstSchemaFile(Node node, JsonNode configurationJson) {
 		String schemaFileName = node.getFunctional_type() + ".json";
 			
-		File schemaFile = new File(System.getProperty("user.dir")+ File.separator+ "json" + File.separator+schemaFileName);
+		File schemaFile = new File(System.getProperty("user.dir")+ File.separator+ "jsonschema" + File.separator+schemaFileName);
 
 		if (!schemaFile.exists()) {
 			throw new ForbiddenException("Functional type '"	+ node.getFunctional_type()

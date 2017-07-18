@@ -36,7 +36,7 @@ public class Converter {
 
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws IOException, InterruptedException {
-		
+	
 		String input=new String();
 		String policy=null;
 		String source=null;
